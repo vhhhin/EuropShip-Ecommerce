@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EuropShip | E-Commerce</title>
+      <link rel="icon" type="image/gif" href="/gcore-mark.gif" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+      html {
+        width: 100%;
+        height: 100%;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #000;
+        color: #fff;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+        transition: background-color 0.4s ease-out;
+      }
+
+      #root {
+        width: 100%;
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Use Poppins for headings to match the requested style */
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Poppins', 'Inter', sans-serif;
+        /* slightly tighter tracking like in the reference image */
+        letter-spacing: -0.02em;
+      }
+
+      /* Design tokens + preloader animations */
+      :root{
+        --orange-main: #FF6A00;
+        --orange-deep: #E65C00;
+        --bg-dark: #070A0F;
+        --text-primary: #E6EDF3;
+        /* Header / Typography scale (harmonized) */
+        --site-logo-size: 0.85rem; /* nav logo text (mobile) */
+        --site-nav-size: 0.8rem; /* nav links (mobile) */
+        --site-cta-size: 0.9rem; /* CTA button text */
+        --header-title-size: 1.3rem; /* hero & main header titles (mobile) */
+        --header-title-size-md: 1.5rem; /* tablet */
+        --header-title-size-lg: 1.7rem; /* hero title on desktop */
+        --site-line-height: 1.05;
+      }
+
+      /* Reusable header classes */
+      .site-logo-text { font-size: var(--site-logo-size); line-height: var(--site-line-height); font-weight: 800; letter-spacing: -0.01em; }
+      .site-nav-link { font-size: var(--site-nav-size); line-height: 1.05; font-weight: 700; opacity: .85; }
+      .site-nav-link:hover { opacity: 1; }
+      .site-cta-text { font-size: var(--site-cta-size); font-weight: 800; }
+      .header-title { font-size: var(--header-title-size); line-height: 1.02; font-weight: 800; letter-spacing: -0.02em; }
+
+      @media (min-width: 768px) {
+        :root { --site-logo-size: 0.9rem; --site-nav-size: 0.85rem; --site-cta-size: 0.9rem; --header-title-size: var(--header-title-size-md); }
+      }
+
+      @media (min-width: 1024px) {
+        :root { --site-logo-size: 0.9rem; --site-nav-size: 0.85rem; --site-cta-size: 0.9rem; --header-title-size: var(--header-title-size-lg); }
+      }
+      /* Section headings (harmonized across site) */
+      :root { --section-heading-size: 1.05rem; --section-heading-size-md: 1.22rem; --section-heading-size-lg: 1.7rem; }
+      .section-heading { font-weight: 900; line-height: 1.02; font-size: var(--section-heading-size); letter-spacing: -0.02em; }
+      @media (min-width: 768px) { .section-heading { font-size: var(--section-heading-size-md); } }
+      @media (min-width: 1024px) { .section-heading { font-size: var(--section-heading-size-lg); } }
+
+      @keyframes grid-pulse {
+        0% { opacity: 0.03; transform: translateY(0); }
+        50% { opacity: 0.06; transform: translateY(-2px); }
+        100% { opacity: 0.03; transform: translateY(0); }
+      }
+
+      @keyframes sweep-across {
+        0% { transform: translateX(-110%); }
+        60% { transform: translateX(10%); }
+        100% { transform: translateX(110%); }
+      }
+
+      @keyframes tiny-pulse {
+        0% { transform: scale(1); opacity: 0.6; }
+        50% { transform: scale(1.06); opacity: 1; }
+        100% { transform: scale(1); opacity: 0.6; }
+      }
+
+      /* professional logo core animations */
+      @keyframes core-rotate { 0% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } 100% { transform: rotate(-2deg); } }
+      @keyframes ring-pulse { 0% { transform: scale(1); opacity: 0.85; } 50% { transform: scale(1.02); opacity: 0.95; } 100% { transform: scale(1); opacity: 0.85; } }
+
+      .logo-core {
+        width: 96px; height: 96px; border-radius: 999px; overflow: hidden; display:flex; align-items:center; justify-content:center;
+        animation: core-rotate 6s ease-in-out infinite, tiny-pulse 2.5s ease-in-out infinite;
+        will-change: transform, filter;
+      }
+      .logo-core img { width: 100%; height: 100%; object-fit: cover; filter: drop-shadow(0 10px 30px rgba(0,0,0,0.6)); }
+
+      .logo-ring {
+        border-radius: 999px; border: 1px solid rgba(255,255,255,0.08); box-shadow: inset 0 0 40px rgba(255,106,0,0.04), 0 8px 30px rgba(0,0,0,0.6);
+        background: radial-gradient(circle at 50% 40%, rgba(255,106,0,0.02), transparent 45%);
+        animation: ring-pulse 3.8s ease-in-out infinite;
+      }
+
+      .logo-glow { background: radial-gradient(circle, rgba(255,106,0,0.24), transparent 35%); filter: blur(36px); opacity: 1.2; mix-blend-mode: screen; }
+
+      /* LED dot style (realistic diode) */
+      .led-dot {
+        /* LED becomes a prominent, lengthened segment (leading edge anchored at path point) */
+        width: 40px; height: 6px; border-radius: 999px;
+        /* bright head (near the leading edge) with a warm trailing falloff */
+        background: radial-gradient(circle at 8% 50%, #FFE9D6 0%, #FFA14A 8%, #FF9A3A 22%, #FF7A1A 46%, #FF6A00 72%, #E65C00 100%);
+        box-shadow: 0 0 12px rgba(255,140,60,0.95), 0 0 36px rgba(255,106,0,0.55), 0 0 64px rgba(255,106,0,0.28);
+        position: absolute; transform: translate(0%, -50%); z-index: 70; pointer-events: none;
+        will-change: transform, left, top, opacity, filter;
+        opacity: 0; /* hidden until outside chip */
+        filter: saturate(1.05) drop-shadow(0 4px 18px rgba(255,120,40,0.18));
+      }
+
+      /* Node logo heartbeat (subtle scale pulse) */
+      @keyframes node-heartbeat {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.08); }
+        100% { transform: scale(1); }
+      }
+
+      /* Subtle orange radial glow behind node squares */
+      @keyframes node-glow-pulse {
+        0% { transform: scale(0.9); opacity: 0.12; }
+        50% { transform: scale(1.12); opacity: 0.28; }
+        100% { transform: scale(0.9); opacity: 0.12; }
+      }
+
+      .node-logo {
+        display: inline-block;
+        animation: node-heartbeat 2.2s ease-in-out infinite;
+        transform-origin: 50% 50%;
+        will-change: transform;
+      }
+
+      .node-glow {
+        position: absolute;
+        inset: 6px; /* keep inside the rounded square */
+        border-radius: 1.2rem;
+        background: radial-gradient(circle at 50% 40%, rgba(255,140,60,0.42), rgba(255,106,0,0.28) 40%, rgba(255,106,0,0.08) 70%, transparent 100%);
+        filter: blur(18px);
+        z-index: 6;
+        pointer-events: none;
+        opacity: 0.24;
+        mix-blend-mode: screen;
+        transform: scale(0.96);
+        animation: node-glow-pulse 2.6s ease-in-out infinite;
+      }
+
+      /* when node is active, intensify both heartbeat and glow */
+      .node-active .node-logo { animation-duration: 1.6s; transform-origin: 50% 50%; }
+      .node-active .node-glow { opacity: 0.48; filter: blur(20px); transform: scale(1.08); }
+
+      /* ===== Central chip (energy hub) styling ===== */
+      @keyframes chip-breathe {
+        0% { box-shadow: 0 8px 40px rgba(255,90,30,0.18), inset 0 0 40px rgba(255,90,30,0.02); transform: scale(1); }
+        50% { box-shadow: 0 28px 120px rgba(255,106,0,0.42), 0 0 80px rgba(255,140,60,0.28), inset 0 0 52px rgba(255,90,30,0.06); transform: scale(1.02); }
+        100% { box-shadow: 0 8px 40px rgba(255,90,30,0.18), inset 0 0 40px rgba(255,90,30,0.02); transform: scale(1); }
+      }
+
+      @keyframes chip-pulse-quick {
+        0% { transform: scale(1); filter: drop-shadow(0 10px 40px rgba(255,106,0,0.24)); }
+        50% { transform: scale(1.03); filter: drop-shadow(0 48px 140px rgba(255,140,60,0.48)) drop-shadow(0 20px 60px rgba(255,106,0,0.32)); }
+        100% { transform: scale(1); filter: drop-shadow(0 10px 40px rgba(255,106,0,0.24)); }
+      }
+
+      @keyframes inner-gradient-move {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+
+      .chip {
+        position: relative;
+        overflow: hidden;
+        border-radius: 2.6rem;
+        will-change: transform, box-shadow, filter;
+        animation: chip-breathe 4.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        transition: transform 260ms ease, box-shadow 260ms ease, filter 260ms ease;
+        background: linear-gradient(180deg, rgba(0,0,0,0.62), rgba(6,6,6,0.72));
+      }
+
+      /* subtle inner moving gradient (dark→orange) */
+      .chip-inner-gradient {
+        position: absolute; inset: 0; z-index: 2; pointer-events: none;
+        background: linear-gradient(120deg, rgba(0,0,0,0.36) 0%, rgba(30,14,9,0.36) 30%, rgba(255,110,50,0.06) 60%, rgba(255,80,10,0.08) 100%);
+        background-size: 200% 100%;
+        mix-blend-mode: overlay;
+        opacity: 0.5;
+        transform: translateZ(0);
+        animation: inner-gradient-move 16s linear infinite;
+      }
+
+      /* diffused halo layer behind the square */
+      .chip-glow-bg {
+        position: absolute; inset: -8px; z-index: 0; border-radius: 2.6rem; pointer-events: none;
+        background: radial-gradient(60% 60% at 50% 40%, rgba(255,120,60,0.42), rgba(255,90,30,0.24) 34%, rgba(255,80,20,0.08) 60%, rgba(0,0,0,0) 85%);
+        filter: blur(24px);
+        opacity: 1.4;
+        transition: opacity 260ms ease, transform 260ms ease;
+      }
+
+      /* intensify when chipPulse is active (synced with LED) */
+      .chip-pulse { animation: chip-pulse-quick 360ms ease-out 1; }
+      .chip-pulse .chip-glow-bg { transform: scale(1.18); opacity: 1.8; filter: blur(40px); }
+      .chip-pulse .chip-inner-gradient { opacity: 0.8; animation-duration: 10s; }
+
+      /* subtle sweep (energy scan) moving across the chip logo */
+      @keyframes sweep-move {
+        0% { transform: translateX(-140%) rotate(-12deg); opacity: 0; }
+        12% { opacity: 0.08; }
+        45% { transform: translateX(10%) rotate(-12deg); opacity: 0.28; }
+        75% { opacity: 0.08; }
+        100% { transform: translateX(140%) rotate(-12deg); opacity: 0; }
+      }
+
+      .chip-sweep {
+        position: absolute; z-index: 8; left: -20%; top: 18%; width: 160%; height: 64%;
+        background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,160,100,0.22) 30%, rgba(255,220,180,0.18) 50%, rgba(255,140,60,0.16) 70%, rgba(255,255,255,0) 100%);
+        filter: blur(10px) saturate(1.05);
+        mix-blend-mode: screen; /* does not permanently recolor the logo */
+        opacity: 0.18;
+        pointer-events: none;
+        transform: translateX(-120%) rotate(-12deg);
+        animation: sweep-move 9.5s linear infinite;
+        transition: opacity 220ms ease, filter 220ms ease;
+      }
+
+      /* intensify sweep briefly when chip pulses (synced with LED) */
+      .chip-pulse .chip-sweep { animation-duration: 0.9s; opacity: 0.56; filter: blur(18px) saturate(1.25); }
+
+      /* ensure sweep remains subtle on small screens */
+      @media (max-width: 640px) {
+        .chip-sweep { opacity: 0.12; filter: blur(8px); height: 56%; top: 22%; }
+        .chip-pulse .chip-sweep { opacity: 0.32; }
+      }
+
+      /* ensure image/logo sits above inner gradient */
+      .chip > img { position: relative; z-index: 9; }
+
+      /* small accessibility: reduce motion respect */
+      @media (prefers-reduced-motion: reduce) {
+        .chip, .node-logo { animation: none !important; }
+        .chip-sweep { animation: none !important; opacity: 0.06; }
+      }
+
+      /* terminal micro text style used in loader */
+      .loader-terminal {
+        font-family: 'Inter', sans-serif;
+        font-size: 12px;
+        letter-spacing: 0.25em;
+        color: rgba(230,237,243,0.18);
+        text-transform: uppercase;
+      }
+
+      .sweep-orange {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, rgba(255,106,0,0) 0%, rgba(255,106,0,0.12) 45%, rgba(255,106,0,0.28) 55%, rgba(255,106,0,0) 100%);
+        transform: translateX(-110%);
+        pointer-events: none;
+      }
+
+      .sweep-orange.active { animation: sweep-across 0.7s cubic-bezier(.2,.8,.2,1) forwards; }
+
+      .preloader-grid {
+        background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+        background-size: 48px 48px;
+        opacity: 0.03;
+        animation: grid-pulse 6s ease-in-out infinite;
+      }
+
+      .loader-logo-stroke { stroke: rgba(255,255,255,0.14); stroke-width: 2.2; fill: none; }
+      .loader-logo-fill { fill: var(--text-primary); opacity: 0; }
+
+      .skip-btn {
+        background: transparent;
+        border: 1px solid rgba(255,255,255,0.08);
+        color: rgba(230,237,243,0.85);
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-weight: 600;
+        cursor: pointer;
+        opacity: 0.9;
+      }
+      .skip-btn[disabled] { opacity: 0.28; cursor: default; }
+
+      /* reduce pointer-events during preloader to avoid layout shifts */
+      .no-interaction { pointer-events: none; }
+
+      /* ensure loader overlay doesn't cause CLS */
+      #root, body, html { height: 100%; }
+
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-track { background: #000; }
+      ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+      
+      .glass {
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      @keyframes btn-sweep {
+        0% { left: -100%; }
+        20% { left: 100%; }
+        100% { left: 100%; }
+      }
+      .sweep-effect {
+        position: absolute;
+        top: 0;
+        width: 60%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        transform: skewX(-25deg);
+        animation: btn-sweep 6s infinite ease-in-out;
+      }
+
+      .bento-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(2, 350px);
+        gap: 1.5rem;
+      }
+
+      @media (max-width: 1024px) {
+        .bento-grid {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto;
+        }
+      }
+      
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      section {
+        /* theme transitions handled by Framer Motion motion values (GPU-accelerated) */
+        /* no local CSS transitions to avoid lag */
+        position: relative;
+      }
+
+      /* ===== AIFaster square visual: animated circuit grid ===== */
+      .ai-square-card {
+        aspect-ratio: 1 / 1; /* keep the visual perfectly square */
+        background-color: #f9fafb; /* light mode base */
+      }
+
+      .ai-square-bg {
+        position: absolute;
+        inset: 0;
+        background-color: #f9fafb; /* light canvas */
+        overflow: hidden;
+      }
+
+      .ai-square-bg::after {
+        /* darker band under text overlay to keep contrast high */
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 34%;
+        background-color: rgba(6, 6, 6, 0.92);
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .ai-square-halo {
+        position: absolute;
+        inset: 14%;
+        border-radius: 2.4rem;
+        background-color: #fef7f2;
+        box-shadow:
+          0 0 60px rgba(255, 148, 94, 0.4),
+          0 0 120px rgba(255, 175, 120, 0.35);
+        filter: blur(18px);
+        opacity: 0.9;
+        pointer-events: none;
+      }
+
+      .ai-grid-lines {
+        position: absolute;
+        inset: 14%;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(4, 1fr);
+        gap: 0;
+        opacity: 0.5;
+        animation: ai-grid-glow 12s ease-in-out infinite;
+        filter: drop-shadow(0 0 18px rgba(255, 161, 104, 0.65));
+        z-index: 0;
+      }
+
+      .ai-grid-cell {
+        border: 1px solid rgba(255, 146, 96, 0.65);
+        box-shadow:
+          0 0 6px rgba(255, 180, 130, 0.8),
+          0 0 18px rgba(255, 140, 80, 0.55);
+        background-color: rgba(255, 255, 255, 0.97);
+      }
+
+      @keyframes ai-grid-glow {
+        0% { opacity: 0.28; }
+        50% { opacity: 0.5; }
+        100% { opacity: 0.28; }
+      }
+
+      .ai-led-layer {
+        position: absolute;
+        inset: 14%;
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      .ai-led-line {
+        position: absolute;
+        overflow: visible;
+      }
+
+      .ai-led-line--h {
+        left: 4%;
+        right: 4%;
+        height: 0;
+      }
+
+      .ai-led-line--v {
+        top: 4%;
+        bottom: 4%;
+        width: 0;
+      }
+
+      .ai-led-line--h.ai-led-line-1 { top: 22%; }
+      .ai-led-line--h.ai-led-line-2 { top: 50%; }
+      .ai-led-line--h.ai-led-line-3 { top: 78%; }
+
+      .ai-led-line--v.ai-led-line-4 { left: 22%; }
+      .ai-led-line--v.ai-led-line-5 { left: 50%; }
+      .ai-led-line--v.ai-led-line-6 { left: 78%; }
+
+      .ai-led-segment {
+        position: absolute;
+        border-radius: 999px;
+        background-color: rgba(255, 143, 71, 0.98);
+        box-shadow:
+          0 0 12px rgba(255, 177, 120, 0.95),
+          0 0 32px rgba(255, 132, 60, 0.9);
+        filter: blur(0.2px);
+      }
+
+      .ai-led-dot {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+        background-color: #ffffff;
+        box-shadow:
+          0 0 10px rgba(255, 255, 255, 0.98),
+          0 0 24px rgba(255, 181, 130, 0.95);
+      }
+
+      .ai-led-line--h .ai-led-segment {
+        top: -1px;
+        height: 2px;
+        width: 22%;
+        animation: ai-led-move-h 4s linear infinite;
+      }
+
+      .ai-led-line--h .ai-led-dot {
+        top: -3px;
+        animation: ai-dot-move-h 4s linear infinite;
+      }
+
+      .ai-led-line--v .ai-led-segment {
+        left: -1px;
+        width: 2px;
+        height: 22%;
+        animation: ai-led-move-v 5s linear infinite;
+      }
+
+      .ai-led-line--v .ai-led-dot {
+        left: -3px;
+        animation: ai-dot-move-v 5s linear infinite;
+      }
+
+      /* stagger timings so motion feels continuous */
+      .ai-led-line-1 .ai-led-segment,
+      .ai-led-line-1 .ai-led-dot { animation-delay: 0s; }
+
+      .ai-led-line-2 .ai-led-segment,
+      .ai-led-line-2 .ai-led-dot { animation-delay: -1.3s; }
+
+      .ai-led-line-3 .ai-led-segment,
+      .ai-led-line-3 .ai-led-dot { animation-delay: -2.6s; }
+
+      .ai-led-line-4 .ai-led-segment,
+      .ai-led-line-4 .ai-led-dot { animation-delay: -0.9s; }
+
+      .ai-led-line-5 .ai-led-segment,
+      .ai-led-line-5 .ai-led-dot { animation-delay: -2.2s; }
+
+      .ai-led-line-6 .ai-led-segment,
+      .ai-led-line-6 .ai-led-dot { animation-delay: -3.5s; }
+
+      @keyframes ai-led-move-h {
+        0% { left: -22%; opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { left: 100%; opacity: 0; }
+      }
+
+      @keyframes ai-dot-move-h {
+        0% { left: -5%; opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { left: 100%; opacity: 0; }
+      }
+
+      @keyframes ai-led-move-v {
+        0% { top: -22%; opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { top: 100%; opacity: 0; }
+      }
+
+      @keyframes ai-dot-move-v {
+        0% { top: -5%; opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { top: 100%; opacity: 0; }
+      }
+
+      @media (max-width: 1024px) {
+        .ai-grid-lines,
+        .ai-led-layer {
+          inset: 16%;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .ai-grid-lines,
+        .ai-led-segment,
+        .ai-led-dot {
+          animation: none !important;
+        }
+      }
+
+      /* Override select option colors from blue to orange - PREMIUM STYLING */
+      select {
+        accent-color: #ff6a00 !important;
+        color-scheme: dark !important;
+      }
+
+      select option {
+        background-color: #1a1a1a !important;
+        background: #1a1a1a !important;
+        color: white !important;
+        padding: 8px !important;
+        border: none !important;
+      }
+
+      select option:checked {
+        background: #ff6a00 linear-gradient(#ff6a00, #ff6a00) !important;
+        background-color: #ff6a00 !important;
+        background-image: linear-gradient(#ff6a00, #ff6a00) !important;
+        color: white !important;
+        font-weight: 600 !important;
+        border: none !important;
+      }
+
+      select option:checked:focus {
+        background: #ff6a00 linear-gradient(#ff6a00, #ff6a00) !important;
+        background-color: #ff6a00 !important;
+        background-image: linear-gradient(#ff6a00, #ff6a00) !important;
+        color: white !important;
+      }
+
+      select option:hover {
+        background: #ff8533 linear-gradient(#ff8533, #ff8533) !important;
+        background-color: #ff8533 !important;
+        background-image: linear-gradient(#ff8533, #ff8533) !important;
+        color: white !important;
+        border: none !important;
+      }
+
+      select option:focus {
+        background: #ff6a00 linear-gradient(#ff6a00, #ff6a00) !important;
+        background-color: #ff6a00 !important;
+        background-image: linear-gradient(#ff6a00, #ff6a00) !important;
+        outline: none !important;
+        color: white !important;
+      }
+
+      select option:active {
+        background: #ff6a00 linear-gradient(#ff6a00, #ff6a00) !important;
+        background-color: #ff6a00 !important;
+        background-image: linear-gradient(#ff6a00, #ff6a00) !important;
+        color: white !important;
+      }
+
+      select option:disabled {
+        color: rgba(255, 255, 255, 0.5) !important;
+        background-color: #1a1a1a !important;
+      }
+
+      /* Remove any webkit default blue highlight */
+      select option {
+        -webkit-appearance: none !important;
+        appearance: none !important;
+      }
+
+      /* Ensure select dropdown color scheme */
+      select {
+        color-scheme: dark;
+      }
+
+      select::-webkit-scrollbar {
+        width: 8px;
+        background: #1a1a1a;
+      }
+
+      select::-webkit-scrollbar-track {
+        background: #1a1a1a;
+      }
+
+      select::-webkit-scrollbar-thumb {
+        background: #ff6a00;
+        border-radius: 4px;
+      }
+
+      select::-webkit-scrollbar-thumb:hover {
+        background: #ff8533;
+      }
+
+      /* CRITICAL: Remove ALL blue from select options - AGGRESSIVE APPROACH */
+      select {
+        accent-color: #ff6a00 !important;
+        color-scheme: dark !important;
+        filter: none !important;
+      }
+
+      select option {
+        background: #1a1a1a !important;
+        color: white !important;
+        padding: 8px !important;
+        border: none !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+      }
+
+      /* Override native browser blue highlight with orange */
+      select option:checked {
+        background: #ff6a00 !important;
+        background-color: #ff6a00 !important;
+        background-image: linear-gradient(#ff6a00, #ff6a00) !important;
+        color: white !important;
+        font-weight: 600 !important;
+        box-shadow: 0 0 10px #ff6a00 !important;
+      }
+
+      /* HTML5 option styling - force orange */
+      select option:checked:before {
+        background: #ff6a00 !important;
+      }
+
+      option {
+        background: #1a1a1a !important;
+        color: white !important;
+      }
+
+      option:checked {
+        background: linear-gradient(#ff6a00, #ff6a00) !important;
+        background-color: #ff6a00 !important;
+        color: white !important;
+      }
+
+      /* Attack from multiple angles - use appearance none and custom styling */
+      select {
+        -webkit-appearance: menulist-button !important;
+        appearance: menulist-button !important;
+      }
+
+      /* Last resort - shift any remaining blue to orange with hue-rotate */
+      select option {
+        filter: hue-rotate(0deg) !important;
+      }
+
+      select option:checked {
+        filter: none !important;
+        background: #ff6a00 !important;
+      }
+      select option:not(:checked):hover {
+        background: #2a2a2a linear-gradient(#2a2a2a, #2a2a2a) !important;
+        background-color: #2a2a2a !important;
+        color: white !important;
+      }
+
+      /* Force orange for all select states - block any blue */
+      select {
+        color-scheme: dark !important;
+      }
+
+      select, select:checked {
+        accent-color: #ff6a00 !important;
+      }
+
+      /* Double-override for stubborn browsers */
+      select {
+        accent-color: #ff6a00 !important;
+        color-scheme: dark !important;
+      }
+
+      /* Override time input picker colors from blue to orange - COMPLETELY REMOVE BLUE */
+      input[type="time"] {
+        accent-color: #ff6a00 !important;
+        caret-color: #ff6a00 !important;
+        color-scheme: dark !important;
+      }
+
+      input[type="time"]::-webkit-datetime-edit {
+        color: white !important;
+        background-color: transparent !important;
+      }
+
+      input[type="time"]::-webkit-datetime-edit-fields-wrapper {
+        color: white !important;
+        background-color: transparent !important;
+      }
+
+      input[type="time"]::-webkit-datetime-edit-hour-field,
+      input[type="time"]::-webkit-datetime-edit-minute-field,
+      input[type="time"]::-webkit-datetime-edit-second-field {
+        color: white !important;
+        background-color: transparent !important;
+      }
+
+      /* AGGRESSIVE: Force orange on all selected time picker elements */
+      input[type="time"]::-webkit-datetime-edit-hour-field:focus,
+      input[type="time"]::-webkit-datetime-edit-minute-field:focus,
+      input[type="time"]::-webkit-datetime-edit-second-field:focus {
+        background-color: #ff6a00 !important;
+        background: #ff6a00 !important;
+        color: white !important;
+        outline: 2px solid #ff6a00 !important;
+        box-shadow: 0 0 8px #ff6a00, inset 0 0 8px rgba(255, 106, 0, 0.3) !important;
+      }
+
+      /* Target the picked/selected hour and minute values - orange not blue */
+      input[type="time"]::-webkit-datetime-edit-hour-field {
+        background: linear-gradient(#ff6a00, #ff6a00) !important;
+      }
+
+      input[type="time"]::-webkit-datetime-edit-minute-field {
+        background: linear-gradient(#ff6a00, #ff6a00) !important;
+      }
+
+      /* Ensure focus on any part of time picker is orange */
+      input[type="time"]:focus {
+        border-color: #ff6a00 !important;
+        box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.15), 0 0 20px rgba(255, 106, 0, 0.3) !important;
+      }
+
+      /* Target the spin buttons in time picker - remove blue and make orange */
+      input[type="time"]::-webkit-outer-spin-button,
+      input[type="time"]::-webkit-inner-spin-button {
+        -webkit-appearance: none !important;
+        appearance: none !important;
+      }
+
+      /* Remove the default blue highlight from spinbutton */
+      input[type="time"]::-webkit-calendar-picker-indicator:focus {
+        background-color: #ff6a00 !important;
+      }
+
+      /* Force orange for the selected hour/minute in the picker dropdown */
+      input[type="time"]::-webkit-datetime-edit-field {
+        color: white !important;
+      }
+
+      /* Target any selected item in dropdown - force orange background */
+      input[type="time"]::-webkit-datetime-edit-text {
+        color: white !important;
+      }
+
+      /* Override system appearance for time input - force accent to orange */
+      input[type="time"] {
+        accent-color: #ff6a00 !important;
+        caret-color: #ff6a00 !important;
+        color-scheme: dark !important;
+      }
+
+      /* Target the dropdown list items in the time picker */
+      input[type="time"]::selection {
+        background-color: #ff6a00 !important;
+        color: white !important;
+      }
+
+      /* Remove webkit's default blue selection color from all input types */
+      input::-webkit-outer-spin-button:focus,
+      input::-webkit-inner-spin-button:focus {
+        box-shadow: none !important;
+        background-color: #ff6a00 !important;
+      }
+
+      /* Firefox time picker override */
+      input[type="time"]::-moz-datetime-edit {
+        color: white !important;
+      }
+
+      input[type="time"]::-moz-calendar-picker-indicator {
+        cursor: pointer;
+        filter: invert(1) hue-rotate(180deg) saturate(2);
+      }
+
+      /* Style the calendar picker icon - make it orange */
+      input[type="time"]::-webkit-calendar-picker-indicator {
+        cursor: pointer;
+        color: #ff6a00 !important;
+        filter: invert(0.5) sepia(1) saturate(5) hue-rotate(0deg);
+      }
+
+      /* Aggressive select option styling - force orange everywhere */
+      select option {
+        background: #1a1a1a !important;
+        color: white !important;
+        padding: 8px !important;
+      }
+
+      select option:checked {
+        background: #ff6a00 linear-gradient(#ff6a00, #ff6a00) !important;
+        background-color: #ff6a00 !important;
+        background-image: linear-gradient(#ff6a00, #ff6a00) !important;
+        color: white !important;
+        font-weight: 600 !important;
+        outline: none !important;
+        box-shadow: none !important;
+        text-shadow: 0 0 0 white !important;
+      }
+
+      select option:hover {
+        background: #ff8533 linear-gradient(#ff8533, #ff8533) !important;
+        background-color: #ff8533 !important;
+        color: white !important;
+      }
+
+      select option:active {
+        background: #ff6a00 linear-gradient(#ff6a00, #ff6a00) !important;
+        background-color: #ff6a00 !important;
+        color: white !important;
+      }
+
+      /* Premium text selection for all inputs */
+      input::selection,
+      select::selection,
+      textarea::selection {
+        background-color: rgba(255, 106, 0, 0.4);
+        color: white;
+      }
+
+      /* Ensure all input focus states are orange */
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+      }
+
+      /* Premium input/select focus glow effect */
+      input[type="text"]:focus,
+      input[type="tel"]:focus,
+      input[type="email"]:focus,
+      input[type="time"]:focus,
+      select:focus,
+      textarea:focus {
+        box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.15), 0 0 20px rgba(255, 106, 0, 0.3) !important;
+      }
+
+      /* Hover state for inputs - premium subtle effect */
+      input[type="text"]:hover:not(:focus),
+      input[type="tel"]:hover:not(:focus),
+      input[type="email"]:hover:not(:focus),
+      input[type="time"]:hover:not(:focus),
+      select:hover:not(:focus),
+      textarea:hover:not(:focus) {
+        border-color: rgba(255, 106, 0, 0.4) !important;
+        background-color: rgba(0, 0, 0, 0.5) !important;
+      }
+
+      /* ===== MOBILE RESPONSIVE FIXES (max-width: 768px) ===== */
+      @media (max-width: 768px) {
+        /* Prevent horizontal overflow globally */
+        html, body {
+          overflow-x: hidden;
+          width: 100%;
+        }
+
+        /* 1️⃣ PRELOADER MOBILE FIX */
+        /* Ensure preloader fills entire viewport properly */
+        motion-div[key="preloader"],
+        .no-interaction {
+          width: 100vw;
+          height: 100vh;
+          position: fixed;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+        }
+
+        /* Reduce logo size in preloader phase 2 */
+        .w-20 {
+          width: 64px !important;
+        }
+        .h-20 {
+          height: 64px !important;
+        }
+
+        /* Reduce text size in preloader */
+        .loader-terminal {
+          font-size: 10px;
+          letter-spacing: 0.15em;
+        }
+
+        /* Reduce progress bar width on mobile */
+        @media (max-width: 640px) {
+          .preloader-grid {
+            opacity: 0.02;
+          }
+        }
+
+        /* 2️⃣ NAVBAR MOBILE FIX */
+        /* Navbar responsive padding */
+        nav div.max-w-6xl {
+          margin-left: 0;
+          margin-right: 0;
+          padding-left: 8px;
+          padding-right: 8px;
+        }
+
+        /* Reduce navbar inner padding */
+        nav motion-div {
+          padding-left: 12px !important;
+          padding-right: 12px !important;
+          padding-top: 6px !important;
+          padding-bottom: 6px !important;
+        }
+
+        /* Reduce logo size on navbar */
+        nav .w-9, nav .sm\:w-10,
+        nav .h-9, nav .sm\:h-10 {
+          width: 32px !important;
+          height: 32px !important;
+        }
+
+        /* Reduce logo text size on navbar */
+        nav .site-logo-text {
+          font-size: 0.75rem;
+          letter-spacing: -0.01em;
+        }
+
+        /* Hide desktop nav links on mobile */
+        .hidden.lg\:flex {
+          display: none !important;
+        }
+
+        /* Reduce CTA button size */
+        .hidden.sm\:block {
+          padding: 8px 16px !important;
+          font-size: 0.75rem !important;
+        }
+
+        /* 3️⃣ AIFASTER SECTION MOBILE FIX */
+        /* Reduce section padding on mobile */
+        section[data-theme-trigger="light"] {
+          padding-top: 24px !important;
+          padding-bottom: 24px !important;
+          padding-left: 12px !important;
+          padding-right: 12px !important;
+        }
+
+        /* Stack flex-row to flex-col on mobile */
+        .flex.flex-col.lg\:flex-row {
+          flex-direction: column !important;
+        }
+
+        /* Reduce card size on mobile */
+        .lg\:flex-none.lg\:w-\[460px\],
+        .max-w-\[460px\] {
+          width: 100% !important;
+          max-width: 100% !important;
+          aspect-ratio: 1 / 1;
+        }
+
+        /* Reduce gap between elements on mobile */
+        .gap-20 {
+          gap: 12px !important;
+        }
+
+        /* AI Faster heading responsive */
+        section[data-theme-trigger="light"] .section-heading {
+          font-size: clamp(1rem, 5vw, 1.5rem) !important;
+        }
+
+        /* Feature items on smaller screens */
+        .grid.grid-cols-1.sm\:grid-cols-2 {
+          gap: 12px !important;
+        }
+
+        .grid.grid-cols-1.sm\:grid-cols-2 > div {
+          min-height: auto !important;
+          padding: 12px !important;
+          font-size: 0.75rem !important;
+        }
+
+        /* 4️⃣ GLOBAL NETWORK MOBILE FIX */
+        /* Network section responsive */
+        section:has(> div canvas) {
+          padding-left: 12px !important;
+          padding-right: 12px !important;
+        }
+
+        /* Responsive heading for network */
+        section:has(> div canvas) h2 {
+          font-size: clamp(1.2rem, 6vw, 2rem) !important;
+          line-height: 1.1;
+        }
+
+        /* Legend wrapper responsive on mobile */
+        section:has(> div canvas) > div:last-of-type {
+          margin-top: 12px !important;
+          padding: 0 12px !important;
+        }
+
+        /* Legend text responsive on mobile */
+        .flex.gap-8.px-8.py-6 {
+          flex-direction: column !important;
+          gap: 12px !important;
+          padding: 12px !important;
+          font-size: 0.75rem !important;
+          width: 100%;
+          max-width: 100%;
+          overflow-x: hidden;
+        }
+
+        .flex.gap-8.px-8.py-6 > div {
+          width: 100%;
+        }
+
+        .flex.gap-8.px-8.py-6 .flex.items-center.gap-3 {
+          width: 100%;
+          min-width: 0;
+        }
+
+        .flex.gap-8.px-8.py-6 .flex.items-center.gap-3 span {
+          word-break: break-word;
+          overflow-wrap: break-word;
+        }
+
+        .flex.gap-8.px-8.py-6 .w-px {
+          width: 100% !important;
+          height: 1px !important;
+          margin: 8px 0 !important;
+        }
+
+        /* Legend subtitle responsive */
+        section:has(> div canvas) > div:last-of-type > p {
+          font-size: 0.65rem !important;
+          margin-bottom: 8px !important;
+        }
+
+        /* Tooltip responsive on mobile */
+        .fixed.bg-gradient-to-br {
+          font-size: 0.7rem !important;
+          padding: 8px 12px !important;
+          max-width: calc(100vw - 24px) !important;
+          right: 12px !important;
+          left: auto !important;
+        }
+
+        .fixed.bg-gradient-to-br p {
+          font-size: 0.65rem !important;
+        }
+
+        .fixed.bg-gradient-to-br .flex.items-center {
+          width: 100%;
+          overflow: hidden;
+        }
+
+        /* 5️⃣ HERO SECTION MOBILE FIX */
+        /* Hero section responsive */
+        section[id="hero"],
+        section:has(SVG[viewBox]) {
+          padding-left: 0 !important;
+          padding-right: 0 !important;
+          overflow: hidden;
+        }
+
+        /* Hero icons FIX ON MOBILE */
+        /* Reduce hero node icon sizes */
+        .absolute.w-16.h-16 {
+          width: 40px !important;
+          height: 40px !important;
+        }
+
+        .sm\:w-18.sm\:h-18 {
+          width: 40px !important;
+          height: 40px !important;
+        }
+
+        .md\:w-20.md\:h-20 {
+          width: 50px !important;
+          height: 50px !important;
+        }
+
+        /* Hero section node reduction */
+        [id^="node-"] {
+          width: 40px !important;
+          height: 40px !important;
+        }
+
+        @media (min-width: 480px) and (max-width: 768px) {
+          [id^="node-"] {
+            width: 50px !important;
+            height: 50px !important;
+          }
+        }
+
+        /* Reduce central chip size on mobile */
+        .chip {
+          width: 60px !important;
+          height: 60px !important;
+        }
+
+        .chip img {
+          width: 100% !important;
+          height: 100% !important;
+        }
+
+        /* Reduce chip pins size */
+        .chip [class*="absolute"] > div {
+          gap: 6px !important;
+        }
+
+        /* Chip glow and gradient adjustments for mobile */
+        .chip-glow-bg {
+          inset: -4px !important;
+        }
+
+        /* Reduce logo ring and glow on mobile preloader */
+        .logo-core {
+          width: 80px !important;
+          height: 80px !important;
+        }
+
+        .logo-ring {
+          width: 160px !important;
+          height: 160px !important;
+        }
+
+        .logo-glow {
+          width: 120px !important;
+          height: 120px !important;
+        }
+
+        /* Hero title responsive */
+        #hero-title {
+          font-size: clamp(1.5rem, 8vw, 3rem) !important;
+        }
+
+        /* Hero subtitle responsive */
+        #hero-title + p,
+        section:has(#hero-title) p {
+          font-size: clamp(0.9rem, 4vw, 1.25rem) !important;
+        }
+
+        /* Hero buttons responsive */
+        .site-cta-text {
+          font-size: clamp(0.75rem, 2vw, 0.9rem) !important;
+        }
+
+        /* 6️⃣ PREVENT OVERFLOW HORIZONTAL */
+        /* Global overflow fix */
+        main {
+          overflow-x: hidden;
+          width: 100%;
+          flex: 1;
+        }
+
+        section {
+          overflow-x: hidden;
+          width: 100%;
+        }
+
+        /* Fix all containers */
+        .max-w-7xl, .max-w-6xl {
+          width: 100%;
+          padding-left: 12px !important;
+          padding-right: 12px !important;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        /* 7️⃣ RESPONSIVE TEXT WITH CLAMP */
+        .text-5xl {
+          font-size: clamp(1.5rem, 8vw, 3rem);
+        }
+
+        .text-8xl {
+          font-size: clamp(1.75rem, 10vw, 4rem);
+        }
+
+        .text-4xl {
+          font-size: clamp(1.25rem, 7vw, 2.25rem);
+        }
+
+        /* 8️⃣ CANVAS RESPONSIVE */
+        canvas {
+          width: 100% !important;
+          height: auto !important;
+          max-width: 100%;
+        }
+
+        /* 9️⃣ GLOBAL STARFIELD FIX */
+        .global-starfield {
+          width: 100%;
+          height: 100%;
+          position: fixed;
+          z-index: -10;
+        }
+
+        /* 🎮 PLAYGROUND MOBILE FIX */
+        /* Tabs container responsive */
+        .flex.justify-center.gap-3.mb-10 {
+          gap: 8px !important;
+          padding: 0 !important;
+          margin-left: -12px;
+          margin-right: -12px;
+          padding-left: 12px !important;
+          padding-right: 12px !important;
+          overflow-x: auto;
+          scroll-behavior: smooth;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        .flex.justify-center.gap-3.mb-10::-webkit-scrollbar {
+          height: 3px;
+        }
+
+        .flex.justify-center.gap-3.mb-10::-webkit-scrollbar-thumb {
+          background: rgba(255, 106, 0, 0.4);
+          border-radius: 999px;
+        }
+
+        /* Tab buttons - super compact on mobile */
+        .flex.justify-center.gap-3.mb-10 button {
+          padding: 8px 12px !important;
+          font-size: 10px !important;
+          flex-shrink: 0;
+          min-width: auto;
+          white-space: nowrap;
+          gap: 4px !important;
+          border-radius: 999px;
+          letter-spacing: -0.5px;
+        }
+
+        .flex.justify-center.gap-3.mb-10 button svg {
+          width: 13px !important;
+          height: 13px !important;
+          flex-shrink: 0;
+          min-width: 13px;
+          min-height: 13px;
+        }
+
+        /* VERY SMALL SCREENS: icons only */
+        @media (max-width: 480px) {
+          .flex.justify-center.gap-3.mb-10 button {
+            padding: 8px !important;
+            font-size: 0 !important;
+            gap: 0 !important;
+            min-width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          .flex.justify-center.gap-3.mb-10 button svg {
+            width: 16px !important;
+            height: 16px !important;
+          }
+
+          .flex.justify-center.gap-3.mb-10 {
+            gap: 6px !important;
+            padding-left: 8px !important;
+            padding-right: 8px !important;
+          }
+
+          /* Still show text, but very compressed */
+          .flex.justify-center.gap-3.mb-10 button {
+            font-size: 7px !important;
+            gap: 2px !important;
+            padding: 6px 8px !important;
+            min-width: auto;
+          }
+        }
+
+        /* SMALL TABLETS: short labels */
+        @media (min-width: 480px) and (max-width: 640px) {
+          .flex.justify-center.gap-3.mb-10 button {
+            padding: 8px 10px !important;
+            font-size: 9px !important;
+            gap: 4px !important;
+          }
+        }
+
+        /* NORMAL TABLETS: medium labels */
+        @media (min-width: 640px) and (max-width: 768px) {
+          .flex.justify-center.gap-3.mb-10 button {
+            padding: 10px 12px !important;
+            font-size: 11px !important;
+            gap: 6px !important;
+          }
+        }
+
+        /* 🎮 PLAYGROUND SECTION RESPONSIVE */
+        section:has(.flex.justify-center.gap-3) {
+          padding-top: 20px !important;
+          padding-bottom: 20px !important;
+          padding-left: 0 !important;
+          padding-right: 0 !important;
+        }
+
+        /* Playground label */
+        section:has(.flex.justify-center.gap-3) > div > div:first-child {
+          font-size: 10px !important;
+          letter-spacing: 0.2em;
+          margin-bottom: 8px !important;
+        }
+
+        /* Playground heading */
+        section:has(.flex.justify-center.gap-3) > div > h2 {
+          font-size: clamp(1.5rem, 6vw, 2rem) !important;
+          margin-bottom: 8px !important;
+          line-height: 1.1;
+          letter-spacing: -0.02em;
+        }
+
+        /* Playground description */
+        section:has(.flex.justify-center.gap-3) > div > p {
+          font-size: clamp(0.85rem, 4vw, 1.125rem) !important;
+          margin-bottom: 14px !important;
+          line-height: 1.4;
+          max-width: 100%;
+        }
+
+        /* Max width container */
+        section:has(.flex.justify-center.gap-3) > div.max-w-5xl {
+          width: 100%;
+          max-width: 100%;
+          padding-left: 0;
+          padding-right: 0;
+          margin: 0;
+        }
+
+        /* Interactive card - reduce padding on mobile */
+        .bg-current\/\[0\.03\] {
+          padding: 16px !important;
+          margin-left: 12px !important;
+          margin-right: 12px !important;
+        }
+
+        /* Card content on tablet */
+        @media (min-width: 480px) and (max-width: 768px) {
+          .bg-current\/\[0\.03\] {
+            padding: 24px !important;
+          }
+        }
+
+        /* Icon in card - reduce size mobile */
+        .bg-current\/\[0\.03\] .w-20.h-20.bg-\[\#ff4d00\] {
+          width: 60px !important;
+          height: 60px !important;
+          margin-bottom: 12px !important;
+        }
+
+        .bg-current\/\[0\.03\] .w-20.h-20.bg-\[\#ff4d00\] svg {
+          width: 28px !important;
+          height: 28px !important;
+        }
+
+        /* Card heading - responsive */
+        .bg-current\/\[0\.03\] > h3 {
+          font-size: clamp(1.25rem, 5vw, 1.75rem) !important;
+          margin-bottom: 12px !important;
+          line-height: 1.2;
+        }
+
+        /* Card description - responsive */
+        .bg-current\/\[0\.03\] > p:nth-of-type(1) {
+          font-size: clamp(0.9rem, 3vw, 1.125rem) !important;
+          margin-bottom: 12px !important;
+          max-width: 100%;
+          line-height: 1.4;
+        }
+
+        /* Input field - mobile responsive */
+        .w-full.bg-current\/5.border.border-current\/10 {
+          padding: 14px 16px !important;
+          font-size: 14px !important;
+          padding-right: 50px !important;
+          max-width: 100%;
+        }
+
+        /* Input wrapper */
+        .relative.group.w-full.max-w-2xl {
+          max-width: 100% !important;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        /* Submit button - mobile responsive */
+        .relative.group.w-full button {
+          width: 44px !important;
+          height: 44px !important;
+          right: 6px !important;
+          top: 6px !important;
+        }
+
+        .relative.group.w-full button svg {
+          width: 20px !important;
+          height: 20px !important;
+        }
+
+        /* Bottom text info - mobile responsive */
+        .bg-current\/\[0\.03\] > p:nth-of-type(2) {
+          font-size: 0.65rem !important;
+          margin-top: 12px !important;
+          letter-spacing: 0.2em;
+          line-height: 1.3;
+        }
+
+        /* Playground section heading */
+        section:has(.flex.justify-center.gap-3) h2 {
+          font-size: clamp(1.5rem, 6vw, 2rem) !important;
+          margin-bottom: 12px !important;
+          line-height: 1.1;
+        }
+
+        /* Playground section description */
+        section:has(.flex.justify-center.gap-3) > div > p:first-of-type {
+          font-size: clamp(0.9rem, 3vw, 1.125rem) !important;
+          margin-bottom: 16px !important;
+          line-height: 1.4;
+        }
+
+        /* Playground label spacing */
+        section:has(.flex.justify-center.gap-3) > div > div:first-child {
+          margin-bottom: 12px !important;
+        }
+      }
+
+      /* ADDITIONAL MOBILE-ONLY FIXES (max-width: 768px) */
+      /* Targeted, minimal CSS to fix preloader, navbar, contact cards and Book a Demo on mobile only */
+      @media (max-width: 768px) {
+        /* PRELOADER: ensure full viewport, centered, responsive text */
+        .no-interaction, .loader-overlay, .logo-core, .loader-terminal {
+          box-sizing: border-box;
+        }
+        .no-interaction, .loader-overlay {
+          width: 100vw !important;
+          height: 100vh !important;
+          position: fixed !important;
+          inset: 0 !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          overflow: hidden !important;
+        }
+        /* Make site logo text fit on mobile without wrapping or clipping */
+        .site-logo-text {
+          font-size: clamp(1rem, 6.5vw, 1.6rem) !important;
+          line-height: 1 !important;
+          white-space: nowrap !important;
+          overflow: visible !important;
+          text-overflow: clip !important;
+        }
+
+        /* NAVBAR MOBILE: compact, premium, hide secondary footer text */
+        nav {
+          padding-top: 6px !important;
+          padding-bottom: 6px !important;
+        }
+        nav .w-9, nav .sm\:w-10, nav .h-9, nav .sm\:h-10 {
+          width: 28px !important;
+          height: 28px !important;
+        }
+        nav .site-logo-text { font-size: 0.72rem !important; }
+        /* Reduce burger icon size */
+        .lg\:hidden svg, .lg\:hidden img { width: 18px !important; height: 18px !important; }
+
+        /* Hide decorative secondary text in mobile navbar/menu only */
+        .fixed.top-0.right-0 .pt-8.border-t { display: none !important; }
+
+        /* CONTACT CARDS: prevent overflow, break long words and adjust padding */
+        section .rounded-2xl, section .rounded-xl, section .rounded-3xl {
+          overflow: hidden !important;
+          word-break: break-word !important;
+          overflow-wrap: break-word !important;
+          hyphens: auto !important;
+          box-sizing: border-box !important;
+        }
+        /* Reduce heavy paddings inside cards on mobile */
+        section .p-6 { padding: 12px !important; }
+        .grid.grid-cols-3 .text-center.p-4 { padding: 12px !important; min-height: auto !important; }
+
+        /* BOOK A DEMO: stack to single column, full-width form and responsive inputs/buttons */
+        .grid.grid-cols-1.lg\:grid-cols-2,
+        .grid.grid-cols-1.md\:grid-cols-2 {
+          grid-template-columns: 1fr !important;
+        }
+        .max-w-sm, .max-w-md, .max-w-5xl, .max-w-6xl, .max-w-7xl {
+          max-width: 100% !important;
+          padding-left: 12px !important;
+          padding-right: 12px !important;
+        }
+        .w-full { max-width: 100% !important; }
+        form .px-4 { padding-left: 12px !important; padding-right: 12px !important; }
+        input[type="text"], input[type="email"], input[type="tel"], textarea, select {
+          width: 100% !important;
+          font-size: 15px !important;
+          line-height: 1.25 !important;
+          word-break: break-word !important;
+          box-sizing: border-box !important;
+        }
+        .relative.group.w-full button { width: auto !important; }
+
+        /* Prevent any remaining horizontal overflow on mobile */
+        html, body { overflow-x: hidden !important; }
+        main, section { overflow-x: hidden !important; }
+        /* Keep content within viewport width */
+        * { max-width: 100vw !important; box-sizing: border-box !important; }
+      }
+
+      /* Extra small screens (max-width: 480px) */
+      @media (max-width: 480px) {
+        .loader-terminal {
+          font-size: 8px;
+          letter-spacing: 0.1em;
+        }
+
+        .site-logo-text {
+          font-size: 0.65rem !important;
+        }
+
+        /* Stack feature items vertically */
+        .grid.grid-cols-1.sm\:grid-cols-2 {
+          grid-template-columns: 1fr !important;
+        }
+
+        /* Reduce LED animation on very small screens */
+        @media (prefers-reduced-motion: no-preference) {
+          .led, .signal-dot {
+            opacity: 0.5;
+          }
+        }
+      }
+
+      /* ===== LIGHT MODE PREMIUM (blanc pur #FFFFFF avec texte #111111) ===== */
+      :root.global-light-mode {
+        background-color: #ffffff;
+      }
+
+      :root.global-light-mode body {
+        background-color: #ffffff !important;
+        color: #111111 !important;
+      }
+
+      :root.global-light-mode section[data-theme-trigger="light"],
+      :root.global-light-mode section[data-theme-trigger="light"] * {
+        transition: background-color 0.25s ease-out, color 0.25s ease-out, border-color 0.25s ease-out !important;
+      }
+
+      :root.global-light-mode section[data-theme-trigger="light"] {
+        background-color: #ffffff !important;
+        color: #111111 !important;
+      }
+
+      :root.global-light-mode section[data-theme-trigger="light"] h1,
+      :root.global-light-mode section[data-theme-trigger="light"] h2,
+      :root.global-light-mode section[data-theme-trigger="light"] h3,
+      :root.global-light-mode section[data-theme-trigger="light"] h4,
+      :root.global-light-mode section[data-theme-trigger="light"] h5,
+      :root.global-light-mode section[data-theme-trigger="light"] h6 {
+        color: #111111 !important;
+      }
+
+      :root.global-light-mode section[data-theme-trigger="light"] p,
+      :root.global-light-mode section[data-theme-trigger="light"] span,
+      :root.global-light-mode section[data-theme-trigger="light"] button,
+      :root.global-light-mode section[data-theme-trigger="light"] a {
+        color: #111111 !important;
+      }
+
+      :root.global-light-mode section[data-theme-trigger="light"] .bg-transparent,
+      :root.global-light-mode section[data-theme-trigger="light"] [class*="bg-"] {
+        background-color: #ffffff !important;
+      }
+
+      :root.global-light-mode section[data-theme-trigger="light"] input,
+      :root.global-light-mode section[data-theme-trigger="light"] textarea,
+      :root.global-light-mode section[data-theme-trigger="light"] select {
+        background-color: #ffffff !important;
+        color: #111111 !important;
+        border-color: rgba(0,0,0,0.15) !important;
+      }
+
+      :root.global-light-mode section[data-theme-trigger="light"] svg {
+        color: #111111 !important;
+      }
+
+      :root.global-light-mode section[data-theme-trigger="light"] [class*="opacity-"],
+      :root.global-light-mode section[data-theme-trigger="light"] [class*="text-"] {
+        color: #111111 !important;
+      }
+
+      /* Override Tailwind dark colors in light mode */
+      :root.global-light-mode section[data-theme-trigger="light"] .dark\:text-white,
+      :root.global-light-mode section[data-theme-trigger="light"] .dark\:bg-gray {
+        background-color: #ffffff !important;
+        color: #111111 !important;
+      }
+    </style>
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@^19.2.4",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+        "react/": "https://esm.sh/react@^19.2.4/",
+        "framer-motion": "https://esm.sh/framer-motion@^12.34.0",
+        "lucide-react": "https://esm.sh/lucide-react@^0.563.0"
+      }
+    }
+    </script>
+  <link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
